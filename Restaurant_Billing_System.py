@@ -148,6 +148,3 @@ except ValueError:
     # Handle the case when the user inputs a non-integer value
     print(">> Enter input in integer format")
     
-
-
-               
