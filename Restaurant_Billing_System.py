@@ -17,7 +17,6 @@ menu = {
     "Fried Rice" : 79
 }
 
-
 # Global variables
 current_item_number = 1
 total_bill = 0
@@ -28,24 +27,13 @@ line = '='
 # Display the restaurant menu
 def display_menu():
 	
-	print(f"\n{line * 4} Welcome To Our Restaurant {line * 4}")
-	print(f"\n{line * 4} OUR MENU {line * 4}\n")
+  print(f"\n{line * 4} Welcome To Our Restaurant {line * 4}")
+  print(f"\n{line * 7} OUR MENU {line * 7}\n")
 
-	# This loop iterates over the `menu` dictionary and prints each menu item and its price.
-	for item in menu: 
-		print(f"- {item} : ₹{menu[item]}")
+  # This loop iterates over the `menu` dictionary and prints each menu item and its price.
+  for item, price in menu.items(): 
+    print(f"- {item.ljust(15)} : ₹{price}")
 
-
-# Function to handle attempts count
-def increment_attempts():
-	
-	global attempts
-	attempts += 1
-	if attempts <= 6:
-		take_order()
-	else:
-		print(">> You are out of attempts because of multiple invalid inputs")
-	
 	
 # Function to take customer's order
 def take_order():
@@ -64,6 +52,7 @@ def take_order():
 		
 		# Process each item in the order
 		while  total_items_to_order > 0:
+      
 			# Ask the customer to enter the item name and quantity
 			item_name = input(f"\n>> Enter item {current_item_number} : ").title().strip()
 
@@ -96,9 +85,18 @@ def take_order():
 		return True
 						
 	except ValueError: 
-		print("Invalid Input! Please enter a numeric value")
+		print(">> Invalid Input! Please enter a numeric value")
 		increment_attempts()
 		
+# Function to handle attempts count
+def increment_attempts():
+	
+	global attempts
+	attempts += 1
+	if attempts <= 6:
+		take_order()
+	else:
+		print("\n>> You are out of attempts because of multiple invalid inputs")
 	
 # Display items ordered by the customer            
 def display_ordered_items():
@@ -158,11 +156,12 @@ def print_invoice():
 
 	print(f"\n{line * 5} Thanks for ordering {line * 5} \n")
 
+
 def main():
 	
 	display_menu()
-	ff = take_order()
-	if ff == True:
+	isTrue = take_order()
+	if isTrue == True:
 		display_ordered_items()
 		order_more_items()
 	
