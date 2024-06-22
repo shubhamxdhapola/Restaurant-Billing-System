@@ -1,7 +1,7 @@
 # This dictionary stores menu items and their prices.
-menu_and_price = {
-
-    "Pasta" : 69,
+menu = {
+    
+	"Pasta" : 69,
     "Pizza" : 79,
     "Burger" : 69,
     "Noodles" : 59,
@@ -17,134 +17,154 @@ menu_and_price = {
     "Fried Rice" : 79
 }
 
-# Print a welcome message and the menu.
-print("\n----Welcome To Our Restaurant----\n")
 
-print("----OUR MENU----\n")
+# Global variables
+current_item_number = 1
+total_bill = 0
+customer_order = {}
+attempts = 1
+line = '='
 
-# This loop iterates over the `menu_and_price` dictionary and prints each menu item and its price.
-for item in menu_and_price: 
-    print(f"- {item} : ₹{menu_and_price[item]}")
+# Display the restaurant menu
+def display_menu():
+	
+	print(f"\n{line * 4} Welcome To Our Restaurant {line * 4}")
+	print(f"\n{line * 4} OUR MENU {line * 4}\n")
 
-# Initialize variables to store the items and their quantities ordered by the customer, total bill, item number and attempts.
-items_ordered_by_customer = {} 
-total_bill=0 
-item_no = 1 
-attempts = 1 
+	# This loop iterates over the `menu` dictionary and prints each menu item and its price.
+	for item in menu: 
+		print(f"- {item} : ₹{menu[item]}")
 
-try:
 
-    # Define a function to take the customer's order.
-    def taking_order():
-    
-        global item_no
-        global total_bill
-        global items_ordered_by_customer
-        global attempts
-    
-        # Ask the customer how many items they want to order.
-        totalNumberofItems = int(input("\n>> How many items would you like to order? : "))
-   
-        # Check if the customer wants to order more items than available in the menu.
-        if totalNumberofItems > len(menu_and_price):
-            pass
+# Function to handle attempts count
+def increment_attempts():
+	
+	global attempts
+	attempts += 1
+	if attempts <= 6:
+		take_order()
+	else:
+		print(">> You are out of attempts because of multiple invalid inputs")
+	
+	
+# Function to take customer's order
+def take_order():
 
-        i = 0
-        while  totalNumberofItems > i:
+	global current_item_number, total_bill, customer_order, attempts
+	
+	try:
+		# Ask how many items the customer wants to order
+		total_items_to_order = int(input("\n>> How many items would you like to order? : "))
 
-            # Ask the customer to enter the item name and quantity.
-            item_name = input(f"\n>> Enter item {item_no} : ")
-            updated_item_name = item_name.title()
-        
-            # Check if the item is available in the menu.    
-            if updated_item_name in menu_and_price:
-                quantity = int(input(">> Enter quantity : "))
-            
-                # Update the quantity if the item is already ordered.
-                if updated_item_name in items_ordered_by_customer:
-                    items_ordered_by_customer[updated_item_name] += quantity
+		# Check if the customer wants to order more items than available in the menu. 
+		if (total_items_to_order) > (len(menu)):
+			print(">> You are trying to order more items than available in the menu please order considering menu.")
+			increment_attempts()
+			return
+		
+		# Process each item in the order
+		while  total_items_to_order > 0:
+			# Ask the customer to enter the item name and quantity
+			item_name = input(f"\n>> Enter item {current_item_number} : ").title().strip()
 
-                else:
-                    items_ordered_by_customer[updated_item_name] = quantity
+			# Check if the item is available in the menu
+			if item_name in menu:
+				quantity = int(input(">> Enter quantity : "))
 
-                total_bill += menu_and_price[updated_item_name] * quantity
-    
-            else: 
-                print(">> Item not available")
-                totalNumberofItems+=1
-                item_no-=1
-                attempts+=1
-    
-            totalNumberofItems-=1
-            item_no+=1
-            
-            # Check if the customer has exceeded the maximum attempts.
-            if attempts > 6: 
-                print("\n>> Maximum attempts reached")
-                break
+				# Update the quantity if the item is already ordered
+				if item_name in customer_order:
+					customer_order[item_name] += quantity
 
-        # If the customer has exceeded the maximum attempts, return from the function
-        if attempts > 6:
-            return
-            
-        # Display the items ordered by the customer
-        you_ordered = "You ordered"
-        print("\n---------------------------")
-        print(f">> {you_ordered.center(21)} <<")
-        print("---------------------------")
-    
-        order_no=1
-        for i in items_ordered_by_customer:
-            print(f"{order_no}. {i} x {items_ordered_by_customer[i]}")
-            order_no+=1
-        
-    # Call the 'taking_order' function.
-    taking_order()
-    
-    # Check if the customer wants to order more items.
-    if attempts < 6:    
-       
-       while True:
-        
-           order_more = input("\n>> Do you want to order more? (Yes/No) : ")
-           updated_order_more = order_more.title()
+				else:
+					customer_order[item_name] = quantity
 
-           if updated_order_more == "Yes":
-               attempts = 1
-               taking_order()
+				# Update the total bill
+				total_bill += menu[item_name] * quantity
 
-           # Display the invoice and total bill when the customer finishes ordering
-           elif updated_order_more == "No":
-               print("\n>> You order has been successfully placed!!")
-               
-               invoice = "Invoice"
-               print("\n-----------------------------------")
-               print(f">>{invoice.center(30)}<<")  
-               print("-----------------------------------")
+				total_items_to_order -= 1
+				current_item_number += 1  
 
-               order_no = 1      
-               for ordered_items in items_ordered_by_customer:
-                   print(f"{order_no}. {ordered_items} x {items_ordered_by_customer[ordered_items]} : ",end="")
-                   print(f"₹{items_ordered_by_customer[ordered_items] * menu_and_price[ordered_items]} (₹{menu_and_price[ordered_items]}/item)")
-                   order_no +=1
-                
-               print("-----------------------------------")
-               print(f">> Your total bill is : ₹{total_bill}")
-               print("-----------------------------------")
+			else: 
+				print(">> This item is not available in our menu please order considering menu")
+				attempts += 1
 
-               print("\n------Thanks for ordering!!------\n")
-               break
+			# Check if the customer has exceeded the maximum attempts.
+			if attempts > 6: 
+				print("\n>> You are out of attempts because of multiple invalid inputs")
+				return False
 
-           else:
-           # Inform the user if the input is invalid
-               print(">> Invalid input!")
-               break
-    
-    else:
-    # Inform the user if they have exceeded the maximum number of attempts
-        print(">> Kindly re-run the program to order again!!")
+		return True
+						
+	except ValueError: 
+		print("Invalid Input! Please enter a numeric value")
+		increment_attempts()
+		
+	
+# Display items ordered by the customer            
+def display_ordered_items():
+	
+	items_ordered = "Items Ordered"
+	print(f"\n{line*30}")
+	print(f'>> {items_ordered.center(23)} <<')
+	print(f"{line*30}")
 
-except ValueError:
-    # Handle the case when the user inputs a non-integer value
-    print(">> Enter input in integer format")
-    
+	for orderNo, (item_name, quantity) in enumerate (customer_order.items(), 1):
+		print(f"{orderNo}. {item_name} x {quantity}")
+
+
+# Ask if customer wants to order more items or finalize the order        
+def order_more_items():
+	
+	global attempts
+	
+	while True:
+		
+		order_more = input("\n>> Do you want to order more? (Yes/No) : ").title().strip()
+
+		if  order_more == "Yes":
+			take_order()
+			display_ordered_items()
+		
+		elif order_more == "No":
+			print(">> Your order has been successfully placed!")
+			print_invoice()
+			break
+		
+		else:
+			print(">> Invalid input! Please enter 'Yes' or 'No'. ")
+			
+			attempts += 1
+			if attempts > 6:
+				print("\n>> You are out of attempts because of multiple invalid inputs")
+				break
+			
+			
+# Print the invoice with the total bill and details of items ordered
+def print_invoice():
+
+	invoice = "Invoice"
+	print(f"\n{line*35}")
+	print(f">>{invoice.center(30)}<<")  
+	print(f"{line*35}")
+
+	for order_no, (item_name, quantity) in enumerate (customer_order.items(), 1):
+		
+		item_total = quantity * menu[item_name]
+		print(f"{order_no}. {item_name} x {quantity} : ₹{item_total} (₹{menu[item_name]}/item) ")
+		
+	print(f"{line*35}")
+	print(f">> Your total bill is : ₹{total_bill}")
+	print(f"{line*35}")
+
+	print(f"\n{line * 5} Thanks for ordering {line * 5} \n")
+
+def main():
+	
+	display_menu()
+	ff = take_order()
+	if ff == True:
+		display_ordered_items()
+		order_more_items()
+	
+if __name__ == "__main__":
+	main()
