@@ -57,7 +57,7 @@ def take_order():
 		total_items_to_order = int(input("\n>> How many items would you like to order? : "))
 
 		# Check if the customer wants to order more items than available in the menu. 
-		if (total_items_to_order) > (len(menu)):
+		if total_items_to_order > len(menu):
 			print(">> You are trying to order more items than available in the menu please order considering menu.")
 			increment_attempts()
 			return
