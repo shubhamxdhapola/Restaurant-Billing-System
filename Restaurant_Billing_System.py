@@ -1,7 +1,7 @@
 # This dictionary stores menu items and their prices.
 menu = {
     
-	"Pasta" : 69,
+    "Pasta" : 69,
     "Pizza" : 79,
     "Burger" : 69,
     "Noodles" : 59,
@@ -33,12 +33,11 @@ def display_menu():
   # This loop iterates over the `menu` dictionary and prints each menu item and its price.
   for item, price in menu.items(): 
     print(f"- {item.ljust(15)} : ₹{price}")
-
 	
 # Function to take customer's order
 def take_order():
 
-	global current_item_number, total_bill, customer_order, attempts
+    global current_item_number, total_bill, customer_order, attempts
 	
 	try:
 		# Ask how many items the customer wants to order
