@@ -156,7 +156,7 @@ def print_invoice():
 	print(f"\n{line * 5} Thanks for ordering {line * 5} \n")
 
 
-def main():
+def restaurant():
 	
 	display_menu()
 	isTrue = take_order()
@@ -165,4 +165,4 @@ def main():
 		order_more_items()
 	
 if __name__ == "__main__":
-	main()
+	restaurant()
